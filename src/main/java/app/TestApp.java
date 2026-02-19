@@ -1,6 +1,6 @@
 package app;
 
-import java.lang.annotation.Native;
+
 import java.util.List;
 
 import org.hibernate.Session;
@@ -8,7 +8,7 @@ import org.hibernate.SessionFactory;
 import org.hibernate.query.NativeQuery;
 
 import core.util.HibernateUtil;
-import web.campaign.vo.Campaign;
+
 
 public class TestApp {
 	public static void main(String[] args) {

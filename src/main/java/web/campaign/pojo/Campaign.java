@@ -1,4 +1,4 @@
-package web.campaign.vo;
+package web.campaign.pojo;
 
 import java.sql.Timestamp;
 
@@ -19,12 +19,12 @@ import lombok.Setter;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name="campaigns")
+@Table(name = "campaigns")
 public class Campaign {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer no;
-	@Column(name = "campaign_id")
+	@Column(name = "campaign_id", insertable = false)
 	private Long campaignId;
 	private String brand;
 	private String model;
@@ -35,18 +35,17 @@ public class Campaign {
 	private Integer fileSize;
 	@Column(name = "is_test_mode")
 	private Boolean isTestMode;
-	@Column(name = "test_list")
+	@Column(name = "test_list", nullable = true)
 	private String testList;
 	@Column(name = "download_by_id")
 	private Integer downloadById;
-	@Column(name = "is_enabled")
+	@Column(name = "is_enabled", insertable = false)
 	private Boolean isEnabled;
-	@Column(name = "create_at")
+	@Column(name = "create_at", insertable = false)
 	private Timestamp createAt;
-	@Column(name = "update_at")
+	@Column(name = "update_at", insertable = false)
 	private Timestamp updateAt;
-	@Column(name = "is_deleted")
+	@Column(name = "is_deleted", insertable = false)
 	private Boolean isDeleted;
-
 
 }

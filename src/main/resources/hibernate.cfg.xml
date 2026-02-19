@@ -16,6 +16,6 @@
 		<property name="hibernate.highlight_sql">true</property>
 
 
-		<mapping class="web.campaign.vo.Campaign"/>
+		<mapping class="web.campaign.pojo.Campaign"/>
 	</session-factory>
 	</hibernate-configuration>

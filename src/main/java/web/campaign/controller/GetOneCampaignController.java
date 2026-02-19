@@ -16,12 +16,11 @@ import web.campaign.service.CampaignService;
 import web.campaign.service.impl.CampaignServiceImpl;
 import web.campaign.vo.CampaignDTO;
 
-
-@WebServlet("/campaign/create")
-public class CreateCampaignController extends HttpServlet {
+@WebServlet("/campaign/getOne")
+public class GetOneCampaignController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private CampaignService campaignService;
-	
+
 	@Override
 	public void init() throws ServletException {
 		try {
@@ -33,29 +32,20 @@ public class CreateCampaignController extends HttpServlet {
 	}
 	
 	@Override
-	protected void doOptions(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		resp.setHeader("Access-Control-Allow-Origin", "*");
-		resp.setHeader("Access-Control-Allow-Headers", "Content-Type");
-		resp.setHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS");
-	}
-	
-	@Override
-	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		Gson gson = new Gson();
-		CampaignDTO campaign = gson.fromJson(req.getReader(), CampaignDTO.class);
+	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		
-		String errMsg = campaignService.create(campaign);
+		Integer campaignNo = Integer.parseInt(req.getParameter("no"));
+		CampaignDTO campaignDTO = campaignService.getOneCampaign(campaignNo);
+		
 		JsonObject respBody = new JsonObject();
-		boolean success = errMsg == null;
+		Gson gson = new Gson();
+		boolean success = campaignDTO != null;
 		respBody.addProperty("success", success);
-		if(!success) {
-			respBody.addProperty("errMsg", errMsg);
-		}
+		respBody.add("campaign", gson.toJsonTree(campaignDTO));
+		
 		resp.setHeader("Access-Control-Allow-Origin", "*");
 		resp.setContentType("application/json");
 		resp.getWriter().write(respBody.toString());
-		
-
 	}
 
 }

@@ -10,10 +10,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 
 import web.campaign.service.CampaignService;
 import web.campaign.service.impl.CampaignServiceImpl;
-import web.campaign.vo.Campaign;
+
 
 
 
@@ -36,15 +37,18 @@ public class GetCampaignController extends HttpServlet {
 	
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		System.out.println("get");
-		Gson gson = new Gson();
 		
 		var campaigns = campaignService.getCampaign();
 		
+		JsonObject respBody = new JsonObject();
+		Gson gson = new Gson();
+		boolean success = campaigns != null;
+		respBody.addProperty("success", success);
+		respBody.add("campaign", gson.toJsonTree(campaigns));
+		
 		resp.setHeader("Access-Control-Allow-Origin", "*");
 		resp.setContentType("application/json");
-		resp.getWriter().write(gson.toJson(campaigns));
-		// TODO change the response format
+		resp.getWriter().write(respBody.toString());
 
 	}
 	
