@@ -9,12 +9,14 @@ import web.campaign.vo.CampaignDTO;
 
 public interface CampaignDao {
 
+	int insert(Campaign campaign);
+	
+	int deleteById(Integer no);
+
+	int update(Campaign campaign);
+	
 	List<Object[]> selectAll();
-
-	int insertOne(Campaign campaign);
-
-	Campaign selectOne(Integer campaignNo);
-
-	int delete(Integer campaignNo);
+	
+	Campaign selectById(Integer campaignNo);
 
 }

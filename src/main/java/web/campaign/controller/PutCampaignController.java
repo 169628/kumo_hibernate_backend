@@ -16,8 +16,8 @@ import web.campaign.service.CampaignService;
 import web.campaign.service.impl.CampaignServiceImpl;
 import web.campaign.vo.CampaignDTO;
 
-@WebServlet("/campaign/delete")
-public class DeleteCampaignController extends HttpServlet {
+@WebServlet("/campaign/put")
+public class PutCampaignController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private CampaignService campaignService;
 
@@ -33,9 +33,11 @@ public class DeleteCampaignController extends HttpServlet {
 	
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		Integer campaignNo = Integer.parseInt(req.getParameter("no"));
 		Gson gson = new Gson();
 		CampaignDTO campaign = gson.fromJson(req.getReader(), CampaignDTO.class);
-		String errMsg = campaignService.delete(campaign);
+		
+		String errMsg = campaignService.put(campaignNo,campaign);
 		JsonObject respBody = new JsonObject();
 		boolean success = errMsg == null;
 		respBody.addProperty("success", success);
@@ -45,6 +47,7 @@ public class DeleteCampaignController extends HttpServlet {
 		resp.setHeader("Access-Control-Allow-Origin", "*");
 		resp.setContentType("application/json");
 		resp.getWriter().write(respBody.toString());
+		
 	}
 
 }

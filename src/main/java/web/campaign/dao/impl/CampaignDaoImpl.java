@@ -15,7 +15,7 @@ public class CampaignDaoImpl implements CampaignDao {
 	SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
 
 	@Override
-	public int insertOne(Campaign campaign) {
+	public int insert(Campaign campaign) {
 		Session session = sessionFactory.openSession();
 		Transaction tx = session.beginTransaction();
 		session.persist(campaign);
@@ -23,6 +23,42 @@ public class CampaignDaoImpl implements CampaignDao {
 		return 1;
 	}
 
+	@Override
+	public int deleteById(Integer no) {
+		Session session = sessionFactory.openSession();
+		Transaction tx = session.beginTransaction();
+		Campaign campaign = session.get(Campaign.class, no);
+		if(campaign == null || campaign.getIsDeleted() == true) {
+			return 0;
+		}
+		campaign.setIsDeleted(true);
+		tx.commit();
+		return 1;
+	}
+	
+	@Override
+	public int update(Campaign newCampaign) {
+		Session session = sessionFactory.openSession();
+		Transaction tx = session.beginTransaction();
+		Campaign campaign = session.get(Campaign.class, newCampaign.getNo());
+		if (campaign == null || campaign.getIsDeleted() == true) {
+			return 0;
+		}
+		campaign.setIsEnabled(newCampaign.getIsEnabled());
+		campaign.setBrand(newCampaign.getBrand());
+		campaign.setModel(newCampaign.getModel());
+		campaign.setSv(newCampaign.getSv());
+		campaign.setTv(newCampaign.getTv());
+		campaign.setFile(newCampaign.getFile());
+		campaign.setFileSize(newCampaign.getFileSize());
+		campaign.setIsTestMode(newCampaign.getIsTestMode());
+		campaign.setTestList(newCampaign.getTestList());
+		campaign.setDownloadById(newCampaign.getDownloadById());
+		tx.commit();
+		
+		return 1;
+	}
+	
 	@Override
 	public List<Object[]> selectAll() {
 		final StringBuilder sql = new StringBuilder("SELECT");
@@ -42,23 +78,12 @@ public class CampaignDaoImpl implements CampaignDao {
 	}
 
 	@Override
-	public Campaign selectOne(Integer campaignNo) {
+	public Campaign selectById(Integer campaignNo) {
 		Session session = sessionFactory.openSession();
 		return session.get(Campaign.class, campaignNo);
 	}
 
-	@Override
-	public int delete(Integer campaignNo) {
-		System.out.println(campaignNo);
-		Session session = sessionFactory.openSession();
-		Transaction tx = session.beginTransaction();
-		Campaign campaign = session.get(Campaign.class, campaignNo);
-		if(campaign == null) {
-			return 0;
-		}
-		session.remove(campaign);
-		tx.commit();
-		return 1;
-	}
+
+
 
 }

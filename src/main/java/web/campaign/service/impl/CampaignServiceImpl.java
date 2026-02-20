@@ -23,17 +23,23 @@ public class CampaignServiceImpl implements CampaignService{
 
 
 	@Override
-	public String create(CampaignDTO campaign) {
+	public String create(CampaignDTO campaignDTO) {
 		Gson gson = new Gson();
-		String sv = campaign.getSv();
-		String tv = campaign.getTv();
+		String brand = campaignDTO.getBrand();
+		String model = campaignDTO.getModel();
+		String sv = campaignDTO.getSv();
+		String tv = campaignDTO.getTv();
 		
-		if (campaign.getBrand() == null) {
+		if (brand == null) {
 			return "Brand is required";
+		} else if (brand.length() < 2 || brand.length() > 20) {
+			return "Brand must be at least 2 digits and maximum 20 digits";
 		}
 		
-		if (campaign.getModel() == null) {
+		if (model == null) {
 			return "Model is required";
+		} else if (model.length() < 2 || model.length() > 10) {
+			return "Model must be at least 2 digits and maximum 10 digits";
 		}
 		
 		if (sv == null) {
@@ -48,30 +54,30 @@ public class CampaignServiceImpl implements CampaignService{
 			return "Target version must be at least 2 digits and maximum 10 digits";
 		}
 		
-		if (campaign.getFile() == null) {
+		if (campaignDTO.getFile() == null) {
 			return "File is required";
 		}
 		
-		if (campaign.getFileSize() == null) {
+		if (campaignDTO.getFileSize() == null) {
 			return "FileSize is required";
 		}
 		
-		if (campaign.getDownloadBy() == null) {
+		if (campaignDTO.getDownloadBy() == null) {
 			return "DownloadBy is required";
 		}
 		
-		Campaign newCampaign = new Campaign();
-		newCampaign.setBrand(campaign.getBrand());
-		newCampaign.setModel(campaign.getModel());
-		newCampaign.setSv(campaign.getSv());
-		newCampaign.setTv(campaign.getTv());
-		newCampaign.setFile(campaign.getFile());
-		newCampaign.setFileSize(campaign.getFileSize());
-		newCampaign.setIsTestMode(campaign.getIsTestMode());
-		newCampaign.setTestList(gson.toJson(campaign.getTestList()));
-		newCampaign.setDownloadById("wifi".equals(campaign.getDownloadBy()) ? 1 : 2);
+		Campaign campaign = new Campaign();
+		campaign.setBrand(campaignDTO.getBrand());
+		campaign.setModel(campaignDTO.getModel());
+		campaign.setSv(campaignDTO.getSv());
+		campaign.setTv(campaignDTO.getTv());
+		campaign.setFile(campaignDTO.getFile());
+		campaign.setFileSize(campaignDTO.getFileSize());
+		campaign.setIsTestMode(campaignDTO.getIsTestMode());
+		campaign.setTestList(gson.toJson(campaignDTO.getTestList()));
+		campaign.setDownloadById("wifi".equals(campaignDTO.getDownloadBy()) ? 1 : 2);
 		
-		int count = campaignDao.insertOne(newCampaign);
+		int count = campaignDao.insert(campaign);
 		if (count != 1) {
 			return "Create campaign failed";
 		}
@@ -89,24 +95,24 @@ public class CampaignServiceImpl implements CampaignService{
 		List<CampaignDTO> result = new ArrayList<>();
 		
 		for(Object[] row : rows ) {
-			CampaignDTO campaign = new CampaignDTO();
-			campaign.setNo((Integer) row[0]);
-			campaign.setCampaignId(((Number) row[1]).longValue());
-			campaign.setBrand((String) row[2]);
-			campaign.setModel((String) row[3]);
-			campaign.setSv((String) row[4]);
-			campaign.setTv((String) row[5]);
-			campaign.setFile((String) row[6]);
-			campaign.setFileSize((Integer) row[7]);
-			campaign.setIsTestMode(((Number) row[8]).intValue() == 1);
-			campaign.setTestList((String) row[9]);
-			campaign.setDownloadBy((String) row[10]);
-			campaign.setIsEnabled(((Number) row[11]).intValue() == 1);
-			campaign.setCreateAt((Timestamp) row[12]);
-			campaign.setUpdateAt((Timestamp) row[13]);
-			campaign.setIsDeleted(((Number) row[14]).intValue() == 1);
+			CampaignDTO campaignDTO = new CampaignDTO();
+			campaignDTO.setNo((Integer) row[0]);
+			campaignDTO.setCampaignId(((Number) row[1]).longValue());
+			campaignDTO.setBrand((String) row[2]);
+			campaignDTO.setModel((String) row[3]);
+			campaignDTO.setSv((String) row[4]);
+			campaignDTO.setTv((String) row[5]);
+			campaignDTO.setFile((String) row[6]);
+			campaignDTO.setFileSize((Integer) row[7]);
+			campaignDTO.setIsTestMode(((Number) row[8]).intValue() == 1);
+			campaignDTO.setTestList((String) row[9]);
+			campaignDTO.setDownloadBy((String) row[10]);
+			campaignDTO.setIsEnabled(((Number) row[11]).intValue() == 1);
+			campaignDTO.setCreateAt((Timestamp) row[12]);
+			campaignDTO.setUpdateAt((Timestamp) row[13]);
+			campaignDTO.setIsDeleted(((Number) row[14]).intValue() == 1);
 			
-			result.add(campaign);
+			result.add(campaignDTO);
 		}
 		
 		return result;
@@ -119,43 +125,112 @@ public class CampaignServiceImpl implements CampaignService{
 			return null;
 		}
 		
-		Campaign selectResult = campaignDao.selectOne(campaignNo);
-		if(selectResult == null) {
+		Campaign campaign = campaignDao.selectById(campaignNo);
+		if(campaign == null || campaign.getIsDeleted() == true) {
 			return null;
 		}
 		
-		CampaignDTO campaign = new CampaignDTO();
-		campaign.setNo(selectResult.getNo());
-		campaign.setCampaignId(selectResult.getCampaignId());
-		campaign.setBrand(selectResult.getBrand());
-		campaign.setModel(selectResult.getModel());
-		campaign.setSv(selectResult.getSv());
-		campaign.setTv(selectResult.getTv());
-		campaign.setFile(selectResult.getFile());
-		campaign.setFileSize(selectResult.getFileSize());
-		campaign.setIsTestMode(selectResult.getIsTestMode());
-		campaign.setTestList(selectResult.getTestList());
-		campaign.setDownloadBy(selectResult.getDownloadById() == 1 ? "wifi" : "user");
-		campaign.setIsEnabled(selectResult.getIsEnabled());
-		campaign.setCreateAt(selectResult.getCreateAt());
-		campaign.setUpdateAt(selectResult.getUpdateAt());
-		campaign.setIsDeleted(selectResult.getIsDeleted());
+		CampaignDTO campaignDTO = new CampaignDTO();
+		campaignDTO.setNo(campaign.getNo());
+		campaignDTO.setCampaignId(campaign.getCampaignId());
+		campaignDTO.setBrand(campaign.getBrand());
+		campaignDTO.setModel(campaign.getModel());
+		campaignDTO.setSv(campaign.getSv());
+		campaignDTO.setTv(campaign.getTv());
+		campaignDTO.setFile(campaign.getFile());
+		campaignDTO.setFileSize(campaign.getFileSize());
+		campaignDTO.setIsTestMode(campaign.getIsTestMode());
+		campaignDTO.setTestList(campaign.getTestList());
+		campaignDTO.setDownloadBy(campaign.getDownloadById() == 1 ? "wifi" : "user");
+		campaignDTO.setIsEnabled(campaign.getIsEnabled());
+		campaignDTO.setCreateAt(campaign.getCreateAt());
+		campaignDTO.setUpdateAt(campaign.getUpdateAt());
+		campaignDTO.setIsDeleted(campaign.getIsDeleted());
 		
-		return campaign;
+		return campaignDTO;
 
 	}
 
 
 	@Override
-	public String delete(CampaignDTO campaign) {
-		if(campaign.getNo() == null) {
+	public String delete(CampaignDTO campaignDTO) {
+		if(campaignDTO.getNo() == null) {
 			return "campaign no is required";
 		}
-		int count = campaignDao.delete(campaign.getNo());
+		int count = campaignDao.deleteById(campaignDTO.getNo());
 		if (count != 1) {
 			return "Delete campaign failed";
 		}
 		return null;
+	}
+
+
+	@Override
+	public String put(Integer campaignNo, CampaignDTO campaignDTO) {
+		Gson gson = new Gson();
+		String brand = campaignDTO.getBrand();
+		String model = campaignDTO.getModel();
+		String sv = campaignDTO.getSv();
+		String tv = campaignDTO.getTv();
+		
+		if(campaignNo == null) {
+			return "Campaign no is required";
+		}
+		
+		if (brand == null) {
+			return "Brand is required";
+		} else if (brand.length() < 2 || brand.length() > 20) {
+			return "Brand must be at least 2 digits and maximum 20 digits";
+		}
+		
+		if (model == null) {
+			return "Model is required";
+		} else if (model.length() < 2 || model.length() > 10) {
+			return "Model must be at least 2 digits and maximum 10 digits";
+		}
+		
+		if (sv == null) {
+			return "Source version is required";
+		} else if (sv.length() < 2 || sv.length() > 10) {
+			return "Source version must be at least 2 digits and maximum 10 digits";
+		}
+		
+		if (tv == null) {
+			return "Target version is required";
+		} else if (tv.length() < 2 || tv.length() > 10) {
+			return "Target version must be at least 2 digits and maximum 10 digits";
+		}
+		
+		if (campaignDTO.getFile() == null) {
+			return "File is required";
+		}
+		
+		if (campaignDTO.getFileSize() == null) {
+			return "FileSize is required";
+		}
+		
+		if (campaignDTO.getDownloadBy() == null) {
+			return "DownloadBy is required";
+		}
+		
+		Campaign campaign = new Campaign();
+		campaign.setNo(campaignNo);
+		campaign.setIsEnabled(campaignDTO.getIsEnabled());
+		campaign.setBrand(campaignDTO.getBrand());
+		campaign.setModel(campaignDTO.getModel());
+		campaign.setSv(campaignDTO.getSv());
+		campaign.setTv(campaignDTO.getTv());
+		campaign.setFile(campaignDTO.getFile());
+		campaign.setFileSize(campaignDTO.getFileSize());
+		campaign.setIsTestMode(campaignDTO.getIsTestMode());
+		campaign.setTestList(gson.toJson(campaignDTO.getTestList()));
+		campaign.setDownloadById("wifi".equals(campaignDTO.getDownloadBy()) ? 1 : 2);
+		
+		int count = campaignDao.update(campaign);
+		if (count != 1) {
+			return "Update campaign failed";
+		}
+		return null;	
 	}
 
 
