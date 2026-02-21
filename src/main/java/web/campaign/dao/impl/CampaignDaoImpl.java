@@ -54,6 +54,7 @@ public class CampaignDaoImpl implements CampaignDao {
 		campaign.setIsTestMode(newCampaign.getIsTestMode());
 		campaign.setTestList(newCampaign.getTestList());
 		campaign.setDownloadById(newCampaign.getDownloadById());
+		// mysql 中 upddate_at 應該是修改的時候會自動儲存當下時間
 		tx.commit();
 		
 		return 1;

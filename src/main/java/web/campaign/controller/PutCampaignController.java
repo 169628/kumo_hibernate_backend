@@ -32,6 +32,14 @@ public class PutCampaignController extends HttpServlet {
 	}
 	
 	@Override
+	protected void doOptions(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		resp.setHeader("Access-Control-Allow-Origin", "*");
+		resp.setHeader("Access-Control-Allow-Headers", "Content-Type");
+		resp.setHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS");
+	}
+	
+	
+	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		Integer campaignNo = Integer.parseInt(req.getParameter("no"));
 		Gson gson = new Gson();
