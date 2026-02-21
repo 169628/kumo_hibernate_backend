@@ -44,7 +44,7 @@ public class GetOneCampaignController extends HttpServlet {
 		respBody.add("campaign", gson.toJsonTree(campaignDTO));
 		
 		resp.setHeader("Access-Control-Allow-Origin", "*");
-		resp.setContentType("application/json");
+		resp.setContentType("application/json; charset=UTF-8");
 		resp.getWriter().write(respBody.toString());
 	}
 
