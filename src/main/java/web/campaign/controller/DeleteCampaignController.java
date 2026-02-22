@@ -30,7 +30,14 @@ public class DeleteCampaignController extends HttpServlet {
 			e.printStackTrace();
 		}
 	}
-	
+
+	@Override
+	protected void doOptions(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		resp.setHeader("Access-Control-Allow-Origin", "*");
+		resp.setHeader("Access-Control-Allow-Headers", "Content-Type");
+		resp.setHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS");
+	}
+
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		Gson gson = new Gson();
@@ -39,7 +46,7 @@ public class DeleteCampaignController extends HttpServlet {
 		JsonObject respBody = new JsonObject();
 		boolean success = errMsg == null;
 		respBody.addProperty("success", success);
-		if(!success) {
+		if (!success) {
 			respBody.addProperty("errMsg", errMsg);
 		}
 		resp.setHeader("Access-Control-Allow-Origin", "*");

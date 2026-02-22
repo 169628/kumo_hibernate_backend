@@ -223,7 +223,7 @@ public class CampaignServiceImpl implements CampaignService{
 		campaign.setFile(campaignDTO.getFile());
 		campaign.setFileSize(campaignDTO.getFileSize());
 		campaign.setIsTestMode(campaignDTO.getIsTestMode());
-		campaign.setTestList(gson.toJson(campaignDTO.getTestList()));
+		campaign.setTestList(campaignDTO.getTestList());
 		campaign.setDownloadById("wifi".equals(campaignDTO.getDownloadBy()) ? 1 : 2);
 		
 		int count = campaignDao.update(campaign);
