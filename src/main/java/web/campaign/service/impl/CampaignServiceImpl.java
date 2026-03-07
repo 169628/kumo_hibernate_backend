@@ -6,12 +6,10 @@ import java.util.List;
 
 import javax.naming.NamingException;
 
-import com.google.gson.Gson;
-
-import web.campaign.vo.CampaignDTO;
 import web.campaign.dao.CampaignDao;
 import web.campaign.dao.impl.CampaignDaoImpl;
-import web.campaign.pojo.Campaign;
+import web.campaign.dto.CampaignDTO;
+import web.campaign.entity.Campaign;
 import web.campaign.service.CampaignService;
 
 public class CampaignServiceImpl implements CampaignService{
@@ -24,7 +22,6 @@ public class CampaignServiceImpl implements CampaignService{
 
 	@Override
 	public String create(CampaignDTO campaignDTO) {
-		Gson gson = new Gson();
 		String brand = campaignDTO.getBrand();
 		String model = campaignDTO.getModel();
 		String sv = campaignDTO.getSv();
@@ -104,13 +101,13 @@ public class CampaignServiceImpl implements CampaignService{
 			campaignDTO.setTv((String) row[5]);
 			campaignDTO.setFile((String) row[6]);
 			campaignDTO.setFileSize((Integer) row[7]);
-			campaignDTO.setIsTestMode(((Number) row[8]).intValue() == 1);
+			campaignDTO.setIsTestMode((Boolean) row[8]);
 			campaignDTO.setTestList((String) row[9]);
 			campaignDTO.setDownloadBy((String) row[10]);
-			campaignDTO.setIsEnabled(((Number) row[11]).intValue() == 1);
+			campaignDTO.setIsEnabled((Boolean) row[11]);
 			campaignDTO.setCreateAt((Timestamp) row[12]);
 			campaignDTO.setUpdateAt((Timestamp) row[13]);
-			campaignDTO.setIsDeleted(((Number) row[14]).intValue() == 1);
+			campaignDTO.setIsDeleted((Boolean) row[14]);
 			
 			result.add(campaignDTO);
 		}
@@ -167,7 +164,6 @@ public class CampaignServiceImpl implements CampaignService{
 
 	@Override
 	public String put(Integer campaignNo, CampaignDTO campaignDTO) {
-		Gson gson = new Gson();
 		String brand = campaignDTO.getBrand();
 		String model = campaignDTO.getModel();
 		String sv = campaignDTO.getSv();

@@ -12,9 +12,9 @@ import javax.servlet.http.HttpServletResponse;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
+import web.campaign.dto.CampaignDTO;
 import web.campaign.service.CampaignService;
 import web.campaign.service.impl.CampaignServiceImpl;
-import web.campaign.vo.CampaignDTO;
 
 @WebServlet("/campaign/put")
 public class PutCampaignController extends HttpServlet {

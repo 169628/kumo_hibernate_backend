@@ -1,4 +1,4 @@
-package web.campaign.pojo;
+package web.campaign.entity;
 
 import java.sql.Timestamp;
 
@@ -7,16 +7,16 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @Entity
-@Setter
-@Getter
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "campaigns")
@@ -47,5 +47,9 @@ public class Campaign {
 	private Timestamp updateAt;
 	@Column(name = "is_deleted", insertable = false)
 	private Boolean isDeleted;
+	
+	@ManyToOne
+	@JoinColumn(name = "download_by_id", insertable = false, updatable = false)
+	private DownloadByRef downloadBy;
 
 }

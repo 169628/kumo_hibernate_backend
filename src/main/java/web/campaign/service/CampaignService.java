@@ -2,7 +2,7 @@ package web.campaign.service;
 
 import java.util.List;
 
-import web.campaign.vo.CampaignDTO;
+import web.campaign.dto.CampaignDTO;
 
 public interface CampaignService {
 	
