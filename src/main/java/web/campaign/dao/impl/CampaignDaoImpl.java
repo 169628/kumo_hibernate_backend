@@ -3,46 +3,39 @@ package web.campaign.dao.impl;
 import java.sql.Timestamp;
 import java.util.List;
 
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
-import org.hibernate.query.Query;
+import javax.persistence.PersistenceContext;
 
-import core.util.HibernateUtil;
+import org.hibernate.Session;
+import org.hibernate.query.Query;
+import org.springframework.stereotype.Repository;
+
 import web.campaign.dao.CampaignDao;
 import web.campaign.entity.Campaign;
 
+@Repository
 public class CampaignDaoImpl implements CampaignDao {
-	SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
+	
+	@PersistenceContext
+	private Session session;
 
 	@Override
 	public int insert(Campaign campaign) {
-		Session session = sessionFactory.openSession();
-		Transaction tx = session.beginTransaction();
 		session.persist(campaign);
-		tx.commit();
-		session.close();
 		return 1;
 	}
 
 	@Override
 	public int deleteById(Integer no) {
-		Session session = sessionFactory.openSession();
-		Transaction tx = session.beginTransaction();
 		Campaign campaign = session.get(Campaign.class, no);
-		if(campaign == null || campaign.getIsDeleted() == true) {
+		if(campaign == null || campaign.getIsDeleted()) {
 			return 0;
 		}
 		campaign.setIsDeleted(true);
-		tx.commit();
-		session.close();
 		return 1;
 	}
 	
 	@Override
 	public int update(Campaign newCampaign) {
-		Session session = sessionFactory.openSession();
-		Transaction tx = session.beginTransaction();
 		Campaign campaign = session.get(Campaign.class, newCampaign.getNo());
 		if (campaign == null || campaign.getIsDeleted() == true) {
 			return 0;
@@ -58,14 +51,12 @@ public class CampaignDaoImpl implements CampaignDao {
 		campaign.setTestList(newCampaign.getTestList());
 		campaign.setDownloadById(newCampaign.getDownloadById());
 		campaign.setUpdateAt(new Timestamp(System.currentTimeMillis()));
-		tx.commit();
-		session.close();
+		
 		return 1;
 	}
 	
 	@Override
 	public List<Object[]> selectAll() {
-		Session session = sessionFactory.openSession();
 		final StringBuilder hql = new StringBuilder("SELECT");
 		hql.append(
 				" c.no, c.campaignId, c.brand, c.model, c.sv, c.tv, c.file, c.fileSize, c.isTestMode, c.testList, d.content as downloadBy, c.isEnabled, c.createAt, c.updateAt, c.isDeleted");
@@ -82,7 +73,6 @@ public class CampaignDaoImpl implements CampaignDao {
 
 	@Override
 	public Campaign selectById(Integer campaignNo) {
-		Session session = sessionFactory.openSession();
 		return session.get(Campaign.class, campaignNo);
 	}
 

@@ -4,20 +4,21 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.naming.NamingException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import web.campaign.dao.CampaignDao;
-import web.campaign.dao.impl.CampaignDaoImpl;
 import web.campaign.dto.CampaignDTO;
 import web.campaign.entity.Campaign;
 import web.campaign.service.CampaignService;
 
+@Service
+@Transactional
 public class CampaignServiceImpl implements CampaignService{
-	private CampaignDao campaignDao;
 	
-	public CampaignServiceImpl() throws NamingException {
-		campaignDao = new CampaignDaoImpl();
-	}
+	@Autowired
+	private CampaignDao campaignDao;
 
 
 	@Override

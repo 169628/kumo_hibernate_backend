@@ -8,6 +8,22 @@
 		<welcome-file>index.jsp</welcome-file>
 	</welcome-file-list>
 	
-	<!-- <request-character-encoding>UTF-8</request-character-encoding>
+	<!-- 以下 Servlet 4.0 才有
+	<request-character-encoding>UTF-8</request-character-encoding>
 	<response-character-encoding>UTF-8</response-character-encoding> -->
+	
+	<!-- Spring start -->
+	<listener>
+		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+	</listener>
+	<context-param>
+		<param-name>contextClass</param-name>
+		<param-value>org.springframework.web.context.support.AnnotationConfigWebApplicationContext</param-value>
+	</context-param>
+	<context-param>
+		<param-name>contextConfigLocation</param-name>
+		<param-value>core.config.SpringConfig</param-value>
+	</context-param>
+	<!-- Spring end -->
+	
 </web-app>

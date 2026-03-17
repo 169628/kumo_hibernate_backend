@@ -2,7 +2,6 @@ package web.campaign.dao;
 
 import java.util.List;
 
-import web.campaign.dto.CampaignDTO;
 import web.campaign.entity.Campaign;
 
 
