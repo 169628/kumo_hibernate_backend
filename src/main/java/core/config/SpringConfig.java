@@ -21,35 +21,36 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @ComponentScan("web.*.*.impl")
 @EnableTransactionManagement
 public class SpringConfig {
-	
+
 	@Bean
-	 public DataSource dataSource() throws IllegalArgumentException, NamingException {
-	  JndiObjectFactoryBean bean = new JndiObjectFactoryBean();
-	  bean.setResourceRef(true);
-	  bean.setJndiName("jdbc/kumo");
-	  bean.afterPropertiesSet();
-	  return (DataSource) bean.getObject();
-	 }
-	
+	public DataSource dataSource() throws IllegalArgumentException, NamingException {
+		JndiObjectFactoryBean bean = new JndiObjectFactoryBean();
+		bean.setResourceRef(true);
+		bean.setJndiName("jdbc/kumo");
+		bean.afterPropertiesSet();
+		return (DataSource) bean.getObject();
+	}
+
 	@Bean
-	 public SessionFactory sessionFactory() throws IllegalArgumentException, NamingException {
-	  return new LocalSessionFactoryBuilder(dataSource())
-	   .scanPackages("web.*.entity")
-	   .addProperties(getHibernateProperties())
-	   .buildSessionFactory();
-	 }
-	
+	public SessionFactory sessionFactory() throws IllegalArgumentException, NamingException {
+		return new LocalSessionFactoryBuilder(dataSource()).scanPackages("web.*.entity")
+				.addProperties(getHibernateProperties()).buildSessionFactory();
+	}
+
 	private Properties getHibernateProperties() {
 		Properties properties = new Properties();
-	     properties.setProperty("hibernate.dialect", MySQLDialect.class.getName());
-	     properties.setProperty("hibernate.show_sql", "true");
-	     properties.setProperty("hibernate.format_sql", "true");
-	     properties.setProperty("hibernate.current_session_context_class", SpringSessionContext.class.getName());
-	     return properties;
-	 }
-	
+		properties.setProperty("hibernate.dialect", MySQLDialect.class.getName());
+		properties.setProperty("hibernate.show_sql", "true");
+		properties.setProperty("hibernate.format_sql", "true");
+		properties.setProperty("hibernate.current_session_context_class", SpringSessionContext.class.getName());
+		return properties;
+	}
+
 	@Bean
-	 public TransactionManager transactionManager() throws IllegalArgumentException, NamingException {
-	  return new HibernateTransactionManager(sessionFactory());
-	 }
+	public TransactionManager transactionManager() throws IllegalArgumentException, NamingException {
+		return new HibernateTransactionManager(sessionFactory());
+	}
+
+
+
 }

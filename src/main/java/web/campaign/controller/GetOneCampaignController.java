@@ -1,45 +1,35 @@
 package web.campaign.controller;
 
-import java.io.IOException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
-import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
-
-import core.util.CommonUtil;
+import core.pojo.Core;
 import web.campaign.dto.CampaignDTO;
 import web.campaign.service.CampaignService;
 
-@WebServlet("/campaign/getOne")
-public class GetOneCampaignController extends HttpServlet {
-	private static final long serialVersionUID = 1L;
-	private CampaignService campaignService;
-
-	@Override
-	public void init() throws ServletException {
-		campaignService = CommonUtil.getBean(getServletContext(), CampaignService.class);
-	}
+@Controller
+@RequestMapping("campaign")
+public class GetOneCampaignController {
 	
-	@Override
-	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		
-		Integer campaignNo = Integer.parseInt(req.getParameter("no"));
+	@Autowired
+	private CampaignService campaignService;
+	
+	@GetMapping("getOne")
+	@ResponseBody
+	public Core getOne(@RequestParam String no){
+		final Core core = new Core();
+		Integer campaignNo = Integer.parseInt(no);
 		CampaignDTO campaignDTO = campaignService.getOneCampaign(campaignNo);
 		
-		JsonObject respBody = new JsonObject();
-		Gson gson = new Gson();
 		boolean success = campaignDTO != null;
-		respBody.addProperty("success", success);
-		respBody.add("campaign", gson.toJsonTree(campaignDTO));
+		core.setSuccess(success);
+		core.setCampaignDTO(campaignDTO);
 		
-		resp.setHeader("Access-Control-Allow-Origin", "*");
-		resp.setContentType("application/json; charset=UTF-8");
-		resp.getWriter().write(respBody.toString());
+		return core;
 	}
 
 }
