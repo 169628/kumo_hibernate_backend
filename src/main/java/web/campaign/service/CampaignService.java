@@ -13,7 +13,7 @@ public interface CampaignService {
 
 	CampaignDTO getOneCampaign(Integer campaignNo);
 
-	String delete(CampaignDTO campaign);
+	String delete(Integer no);
 
 	String put(Integer campaignNo, CampaignDTO campaign);
 

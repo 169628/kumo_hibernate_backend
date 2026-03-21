@@ -151,11 +151,11 @@ public class CampaignServiceImpl implements CampaignService{
 
 
 	@Override
-	public String delete(CampaignDTO campaignDTO) {
-		if(campaignDTO.getNo() == null) {
+	public String delete(Integer no) {
+		if(no == null) {
 			return "campaign no is required";
 		}
-		int count = campaignDao.deleteById(campaignDTO.getNo());
+		int count = campaignDao.deleteById(no);
 		if (count != 1) {
 			return "Delete campaign failed";
 		}
